@@ -1,27 +1,45 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import {
+  RegisterDto,
+  LoginDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto';
 
 @Controller('auth') // sets route prefix
+@UsePipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  register(@Body() body: { name: string; email: string; password: string }) {
+  register(@Body() body: RegisterDto) {
     return this.authService.register(body.name, body.email, body.password);
   }
 
   @Post('login')
-  login(@Body() body: { email: string; password: string }) {
+  login(@Body() body: LoginDto) {
     return this.authService.login(body.email, body.password);
   }
 
   @Post('forgot-password')
-  forgotPassword(@Body() body: { email: string }) {
+  forgotPassword(@Body() body: ForgotPasswordDto) {
     return this.authService.forgotPassword(body.email);
   }
 
   @Post('reset-password')
-  resetPassword(@Body() body: { token: string; password: string }) {
+  resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body.token, body.password);
   }
 }
