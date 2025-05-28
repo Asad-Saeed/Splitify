@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 import { GroupsModule } from './groups/groups.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { FriendsModule } from './friends/friends.module';
 
 dotenv.config();
 @Module({
@@ -16,8 +17,9 @@ dotenv.config();
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI!),
-    UsersModule,
     AuthModule,
+    UsersModule,
+    FriendsModule,
     GroupsModule,
     ExpensesModule,
   ],

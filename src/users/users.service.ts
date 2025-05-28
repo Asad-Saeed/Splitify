@@ -28,4 +28,8 @@ export class UsersService {
     }
     return updatedUser;
   }
+
+  async findAll(): Promise<UserDocument[]> {
+    return this.userModel.find().exec();
+  }
 }
