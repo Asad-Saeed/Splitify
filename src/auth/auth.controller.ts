@@ -11,7 +11,7 @@ import {
   LoginDto,
   ForgotPasswordDto,
   ResetPasswordDto,
-} from './dto';
+} from './dto/auth.dto';
 
 @Controller('auth') // sets route prefix
 @UsePipes(

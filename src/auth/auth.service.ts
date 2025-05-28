@@ -12,7 +12,7 @@ import {
   LoginDto,
   RegisterDto,
   ResetPasswordDto,
-} from './dto';
+} from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
       role,
     });
 
-    const payload = { sub: user._id, email: user.email };
+    const payload = { sub: user._id, email: user.email, role: user.role };
     const token = this.jwtService.sign(payload);
     return { user, token };
   }
@@ -50,7 +50,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user._id, email: user.email };
+    const payload = { sub: user._id, email: user.email, role: user.role };
     const token = this.jwtService.sign(payload, {
       expiresIn: process.env.LOGIN_JWT_EXPIRE!,
     });
@@ -64,7 +64,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const payload = { sub: user._id, email: user.email };
+    const payload = { sub: user._id, email: user.email, role: user.role };
     const token = this.jwtService.sign(payload, {
       expiresIn: process.env.RESET_JWT_EXPIRE!,
     });
