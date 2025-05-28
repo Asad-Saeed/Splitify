@@ -7,6 +7,12 @@ import {
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import {
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+} from './dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +22,8 @@ export class AuthService {
   ) {}
 
   // Register a new user
-  async register(name: string, email: string, password: string) {
+  async register(registerDto: RegisterDto) {
+    const { name, email, password, role } = registerDto;
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
       throw new ConflictException('Email already registered');
@@ -27,6 +34,7 @@ export class AuthService {
       name,
       email,
       password: hashed,
+      role,
     });
 
     const payload = { sub: user._id, email: user.email };
@@ -35,30 +43,37 @@ export class AuthService {
   }
 
   // Login a user
-  async login(email: string, password: string) {
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
     const user = await this.usersService.findByEmail(email);
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { sub: user._id, email: user.email };
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.sign(payload, {
+      expiresIn: process.env.LOGIN_JWT_EXPIRE!,
+    });
     return { user, token };
   }
 
   // Forgot password
-  async forgotPassword(email: string) {
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     const payload = { sub: user._id, email: user.email };
-    const token = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const token = this.jwtService.sign(payload, {
+      expiresIn: process.env.RESET_JWT_EXPIRE!,
+    });
     return { token };
   }
 
   // Reset password
-  async resetPassword(token: string, password: string) {
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { token, password } = resetPasswordDto;
     let decoded: { sub: string; email: string };
 
     try {
