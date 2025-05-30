@@ -27,6 +27,7 @@ import { RequestUser } from 'src/common/types/user.types';
   new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
+    transform: true,
   }),
 )
 export class FriendsController {
