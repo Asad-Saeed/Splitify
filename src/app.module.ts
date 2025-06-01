@@ -9,12 +9,21 @@ import * as dotenv from 'dotenv';
 import { GroupsModule } from './groups/groups.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { FriendsModule } from './friends/friends.module';
+// import { APP_CONFIG } from './config/app.config';
+// import { DATABASE_CONFIG } from './config/database.config';
+// import { CRON_CONFIG } from './config/cron.config';
+// import { CONFIG } from './config';
 
 dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true, // Make the ConfigModule available globally
+      // envFilePath: ['.env', '.dev.env', '.prod.env'], // Load environment variables from .env, .dev.env, or .prod.env
+      // cache: true, // Cache the environment variables to avoid multiple reads
+      // expandVariables: true, // Expand environment variables in the configuration e.g MONGO_URI=${MONGO_URI}.yaml
+      // load: [APP_CONFIG, DATABASE_CONFIG, CRON_CONFIG ], // Load the configuration from the configuration.ts file
+      // load: CONFIG,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI!),
     AuthModule,
