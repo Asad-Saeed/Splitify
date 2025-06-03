@@ -15,12 +15,11 @@ import {
   RespondFriendRequestDto,
 } from './dto/friends.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Request as ExpressRequest } from 'express';
 import { RequestUser } from 'src/common/types/user.types';
 
 @ApiTags('friends')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('friends')
 @UsePipes(

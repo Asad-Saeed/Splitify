@@ -22,12 +22,11 @@ import {
   AddRemoveMembersDto,
   LeaveGroupDto,
 } from './dto/groups.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Request as ExpressRequest } from 'express';
 import { RequestUser } from 'src/common/types/user.types';
 
 @ApiTags('groups')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('groups')
 @UsePipes(
